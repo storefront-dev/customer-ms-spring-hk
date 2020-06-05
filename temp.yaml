@@ -1,0 +1,110 @@
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  annotations:
+    architecture: x86_64
+    authoritative-source-url: registry.access.redhat.com
+    build-date: 2019-10-29T16:44:53.794580
+    commit.image.appsody.dev/author: Hemankita Perabathini <hperabat@in.ibm.com>
+    commit.image.appsody.dev/committer: Hemankita Perabathini <hperabat@in.ibm.com>
+    commit.image.appsody.dev/date: Mon May 11 17:39:54 2020 +0530
+    commit.image.appsody.dev/message: MariaDB k8s yaml
+    commit.stack.appsody.dev/author: kilnerm <38245247+kilnerm@users.noreply.github.com>
+    commit.stack.appsody.dev/committer: GitHub <noreply@github.com>
+    commit.stack.appsody.dev/contextDir: /incubator/java-spring-boot2
+    commit.stack.appsody.dev/date: Fri Apr 3 09:22:57 2020 +0100
+    commit.stack.appsody.dev/message: 'Merge pull request #316 from groeges/release-0.6'
+    description: This image is the Kabanero development container for the java-spring-boot2
+      stack
+    distribution-scope: public
+    image.opencontainers.org/created: "2020-05-11T17:40:18+05:30"
+    image.opencontainers.org/documentation: https://github.com/ibm-garage-ref-storefront/orders-ms-spring
+    image.opencontainers.org/revision: 20441604a9a4ed13d4eb88300b924e223555fe3f-not-pushed
+    image.opencontainers.org/source: https://github.com/ibm-garage-ref-storefront/orders-ms-spring/tree/deploy
+    image.opencontainers.org/url: https://github.com/ibm-garage-ref-storefront/orders-ms-spring
+    k8s.io/description: The Universal Base Image is designed and engineered to be
+      the base layer for all of your containerized applications, middleware and utilities.
+      This base image is freely redistributable, but Red Hat only supports Red Hat
+      technologies through subscriptions for Red Hat products. This image is maintained
+      by Red Hat and updated regularly.
+    k8s.io/display-name: Red Hat Universal Base Image 8
+    maintainer: Red Hat, Inc.
+    name: kabanero/java-spring-boot2
+    openshift.io/expose-services: ""
+    openshift.io/tags: base rhel8
+    redhat.com/build-host: cpt-1002.osbs.prod.upshift.rdu2.redhat.com
+    redhat.com/component: ubi8-container
+    redhat.com/license_terms: https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI
+    release: "277"
+    stack.appsody.dev/authors: Erin Schnabel <schnabel@us.ibm.com>, Ozzy Osborne <ozzy@ca.ibm.com>
+    stack.appsody.dev/configured: docker.io/kabanero/java-spring-boot2:0.3
+    stack.appsody.dev/created: "2020-04-21T06:49:54Z"
+    stack.appsody.dev/description: Spring Boot using OpenJ9 and Maven
+    stack.appsody.dev/documentation: https://github.com/kabanero-io/collections/tree/master/incubator/java-spring-boot2/README.md
+    stack.appsody.dev/licenses: Apache-2.0
+    stack.appsody.dev/revision: 27a3254c80e6c5367a76e6099c2e18b393d15841
+    stack.appsody.dev/source: https://github.com/kabanero-io/collections/tree/master/incubator/java-spring-boot2/image
+    stack.appsody.dev/tag: docker.io/kabanero/java-spring-boot2:0.3.28
+    stack.appsody.dev/title: Spring Boot®
+    stack.appsody.dev/url: https://github.com/kabanero-io/collections/tree/master/incubator/java-spring-boot2
+    summary: Image for Kabanero java-spring-boot2 development
+    url: https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-277
+    vcs-ref: c42933bcdbf9f1c232e981a5e40de257c3534c8e
+    vcs-type: git
+    vendor: Kabanero
+    version: 0.3.23
+  creationTimestamp: null
+  labels:
+    image.opencontainers.org/title: orders-ms-spring
+    stack.appsody.dev/id: java-spring-boot2
+    stack.appsody.dev/version: 0.3.28
+  name: orders-ms-spring
+  namespace: storefront
+spec:
+  applicationImage: docker.io/ibmcase/orders-ms-spring
+  createKnativeService: false
+  expose: true
+  livenessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /micro/a    ctuator/liveness
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 2
+  monitoring:
+    endpoints:
+    - path: /micro/actuator/prometheus
+    labels:
+      k8s-app: orders-ms-spring
+  readinessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /micro/actuator/health
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 2
+    timeoutSeconds: 1
+  env:
+  - name: MYSQL_HOST
+    value: "orders-mariadb"
+  - name: MYSQL_PORT
+    value: "3307"
+  - name: MYSQL_DATABASE
+    value: "ordersdb"
+  - name: MYSQL_USER
+    value: "dbuser"
+  - name: MYSQL_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: orders-mariadb-secret
+        key: mariadb-password
+  - name: HS256_KEY
+    value: "E6526VJkKYhyTFRFMC0pTECpHcZ7TGcq8pKsVVgz9KtESVpheEO284qKzfzg8HpWNBPeHOxNGlyudUHi6i8tFQJXC8PiI48RUpMh23vPDLGD35pCM0417gf58z5xlmRNii56fwRCmIhhV7hDsm3KO2jRv4EBVz7HrYbzFeqI45CaStkMYNipzSm2duuer7zRdMjEKIdqsby0JfpQpykHmC5L6hxkX0BT7XWqztTr6xHCwqst26O0g8r7bXSYjp4a"
+  service:
+    annotations:
+      prometheus.io/path: /micro/actuator/prometheus
+      prometheus.io/scrape: "true"
+    port: 8080
+    type: NodePort
+  stack: java-spring-boot2
+  version: 1.0.0
